@@ -1,14 +1,12 @@
---[[ ShadowCat – Copy Link + Join Group GUI ]]
+--[[ ShadowCat – Copy Link + Join Group GUI (with working copy) ]]
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local guiService = game:GetService("GuiService")
 local clipboard = syn and syn.setclipboard or setclipboard or function(text) end
 
--- The link you want to display and copy
 local loadstringLink = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/intel200155-cpu/ROBLOX.COM/main/lua.roblox"))()'
 local joinLink = "https://bit.ly/robloxxw"
 
--- Build the GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CopyLinkGUI"
 screenGui.ResetOnSpawn = false
@@ -23,7 +21,6 @@ frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
 frame.ClipsDescendants = true
 frame.Parent = screenGui
 
--- Title
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 35)
 title.Position = UDim2.new(0, 0, 0, 5)
@@ -35,7 +32,6 @@ title.Font = Enum.Font.GothamBold
 title.TextXAlignment = Enum.TextXAlignment.Center
 title.Parent = frame
 
--- Link display box (read-only)
 local linkBox = Instance.new("TextBox")
 linkBox.Size = UDim2.new(0.9, 0, 0, 30)
 linkBox.Position = UDim2.new(0.05, 0, 0, 50)
@@ -50,7 +46,6 @@ linkBox.ClearTextOnFocus = false
 linkBox.TextWrapped = false
 linkBox.Parent = frame
 
--- Copy button
 local copyBtn = Instance.new("TextButton")
 copyBtn.Size = UDim2.new(0.4, 0, 0, 35)
 copyBtn.Position = UDim2.new(0.05, 0, 0, 95)
@@ -62,7 +57,6 @@ copyBtn.TextSize = 18
 copyBtn.Font = Enum.Font.GothamBold
 copyBtn.Parent = frame
 
--- Join Group button
 local joinBtn = Instance.new("TextButton")
 joinBtn.Size = UDim2.new(0.4, 0, 0, 35)
 joinBtn.Position = UDim2.new(0.55, 0, 0, 95)
@@ -74,7 +68,6 @@ joinBtn.TextSize = 18
 joinBtn.Font = Enum.Font.GothamBold
 joinBtn.Parent = frame
 
--- Copy button click
 copyBtn.MouseButton1Click:Connect(function()
     local ok, err = pcall(function()
         clipboard(loadstringLink)
@@ -90,7 +83,6 @@ copyBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Join button click – opens bit.ly
 joinBtn.MouseButton1Click:Connect(function()
     pcall(function()
         guiService:OpenBrowserWindow(joinLink)
@@ -100,7 +92,6 @@ joinBtn.MouseButton1Click:Connect(function()
     joinBtn.Text = "👥 Join Group"
 end)
 
--- Close button (X)
 local closeBtn = Instance.new("ImageButton")
 closeBtn.Size = UDim2.new(0, 24, 0, 24)
 closeBtn.Position = UDim2.new(1, -30, 0, 6)
@@ -112,7 +103,6 @@ closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
--- Dragging
 local dragging = false
 local dragStart, startPos
 frame.InputBegan:Connect(function(input)
