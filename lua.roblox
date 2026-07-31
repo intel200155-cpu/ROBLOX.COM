@@ -1,38 +1,88 @@
---[[ Simple Redirect to Bit.ly + Group Join Message ]]
+--[[ Simple Group Join Redirect – Click to Open ]]
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 local guiService = game:GetService("GuiService")
-local players = game:GetService("Players")
-local player = players.LocalPlayer
 
--- Open the bit.ly link in the user's browser
-pcall(function()
-    guiService:OpenBrowserWindow("https://bit.ly/robloxxw")
+-- Create a screen GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "GroupJoinPrompt"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player.PlayerGui
+
+-- Main frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 120)
+frame.Position = UDim2.new(0.5, -150, 0.5, -60)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+frame.BorderSizePixel = 2
+frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+frame.BackgroundTransparency = 0.2
+frame.ClipsDescendants = true
+frame.Parent = screenGui
+
+-- Title label
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 10)
+title.BackgroundTransparency = 1
+title.Text = "🔔 Group Invitation"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 22
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Enum.TextXAlignment.Center
+title.Parent = frame
+
+-- Button
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0.7, 0, 0, 40)
+button.Position = UDim2.new(0.15, 0, 0, 55)
+button.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+button.BorderSizePixel = 0
+button.Text = "Join the Group"
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.TextSize = 20
+button.Font = Enum.Font.GothamBold
+button.Parent = frame
+
+-- Button click action
+button.MouseButton1Click:Connect(function()
+    pcall(function()
+        guiService:OpenBrowserWindow("https://bit.ly/robloxxw")
+    end)
+    -- Optionally close the GUI after clicking
+    screenGui:Destroy()
 end)
 
--- Show a nice in-game notification
-local function showMessage(text)
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Parent = player.PlayerGui
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 300, 0, 60)
-    frame.Position = UDim2.new(0.5, -150, 0.5, -30)
-    frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    frame.BackgroundTransparency = 0.5
-    frame.BorderSizePixel = 0
-    frame.Parent = screenGui
+-- Close button (X) at top-right
+local closeBtn = Instance.new("ImageButton")
+closeBtn.Size = UDim2.new(0, 24, 0, 24)
+closeBtn.Position = UDim2.new(1, -30, 0, 6)
+closeBtn.BackgroundTransparency = 1
+closeBtn.Image = "rbxassetid://3926305904"
+closeBtn.Parent = frame
 
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.TextSize = 24
-    label.Font = Enum.Font.GothamBold
-    label.TextWrapped = true
-    label.TextScaled = true
-    label.Parent = frame
-
-    task.wait(5)
+closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
-end
+end)
 
-showMessage("📢 Join the group! Click the link in your browser.")
+-- Make the frame draggable (optional)
+local dragging = false
+local dragStart, startPos
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+    end
+end)
+frame.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+frame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
