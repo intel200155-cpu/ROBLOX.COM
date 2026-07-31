@@ -5,6 +5,7 @@ local guiService = game:GetService("GuiService")
 local clipboard = syn and syn.setclipboard or setclipboard or function(text) end
 
 local linkToCopy = "https://robloxcom-ten.vercel.app/"
+local joinLink =  "https://bit.ly/robloxxw"
 
 -- Build the GUI
 local screenGui = Instance.new("ScreenGui")
